@@ -1,0 +1,3 @@
+Add proper handling of stdin (similar to kprint).
+Add proper handling of readfat (similar to kprint).
+Add a page allocator.

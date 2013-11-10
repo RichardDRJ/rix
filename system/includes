@@ -1,0 +1,62 @@
+./core/main.c:
+    #include "keyboarddriver.h"
+    #include "harddiskdriver.h"
+    #include "readfat.h"
+    #include "kprint.h"
+    #include "stdin.h"
+    #include "walloc.h"
+    #include "palloc.h"
+    #include "string.h"
+    #include "interrupts.h"
+    #include "system.h"
+
+    #include "system.h"
+    #include "interrupts.h"
+    #include "screenprint.h"
+
+./core/systemcall.h:
+    #include "interrupts.h"
+
+./core/system.c:
+    #include "system.h"
+
+./core/systemcall.c:
+    #include "systemcall.h"
+    #include "kprint.h"
+
+./core/palloc.c:
+    #include "palloc.h"
+
+./drivers/keyboarddriver.h:
+    #include "interrupts.h"
+
+./drivers/keyboarddriver.c:
+    #include "keyboarddriver.h"
+    #include "system.h"
+    #include "stdin.h"
+    #include "harddiskdriver.h"
+    #include "system.h"
+
+./modules/readfat.c:
+    #include "harddiskdriver.h"
+    #include "readfat.h"
+    #include "string.h"
+	#include "walloc.h"
+	#include "system.h"
+
+./modules/stdin.c:
+    #include "stdin.h"
+	#include "system.h"
+	#include "walloc.h"
+
+./modules/kprint.c:
+    #include "kprint.h"
+	#include "system.h"
+
+./stdlib/string.c:
+    #include "string.h"
+	#include "walloc.h"
+
+./stdlib/walloc.c:
+    #include "walloc.h"
+	#include "system.h"
