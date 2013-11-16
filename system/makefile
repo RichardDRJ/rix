@@ -9,8 +9,8 @@ HEADERS		:=	$(shell find $(SRCDIR) -maxdepth 1 -name '*.h')
 OBJECTS 	:=	$(subst src,$(BINDIR),$(SRCS:%.c=%.c.o)) $(subst src,$(BINDIR),$(ASMSRCS:%.asm=%.asm.o))
 
 CFLAGS		:=	-m32 -Wall -Wextra -Werror -nostdlib -fno-builtin -nostartfiles -nodefaultlibs --no-builtin -ffreestanding -fleading-underscore  -std=c99 -g
-LDFLAGS		:=	-T main.ld -ffreestanding -O2 -nostdlib -lgcc
-ASMFLAGS	:=	-felf
+LDFLAGS		:=	-T main.ld -ffreestanding -O2 -nostdlib -lgcc -g
+ASMFLAGS	:=	-felf -g
 INCLUDES	:=	$(addprefix -I,$(SRCDIR))
 
 AS 			:=	nasm
@@ -33,8 +33,9 @@ vdi: start.img
 
 boottest: $(OBJECTS)
 	make -C ../bootloader && cp ../bootloader/start.img $(BINDIR)
-	$(LD) $(BINDIR)/boottest.c.o $(BINDIR)/core/createstack.asm.o $(BINDIR)/core/system.c.o $(BINDIR)/modules/kprint.c.o -o $(TARGET) -m elf_i386 --oformat binary -T main.ld
 	sudo mount -o users,loop $(BINDIR)/start.img startmount/
+	$(CC) $(CFLAGS) $(LDFLAGS) $(INCLUDES) $(DEFS) -c boottest.c -o $(BINDIR)/boottest.c.o
+	$(LD) $(BINDIR)/boottest.c.o $(BINDIR)/core/createstack.asm.o $(BINDIR)/core/system.c.o $(BINDIR)/modules/kprint.c.o -o $(TARGET) $(LDFLAGS)
 	sudo cp $(TARGET) startmount/
 	sudo umount startmount
 
