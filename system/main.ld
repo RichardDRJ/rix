@@ -1,30 +1,43 @@
-ENTRY (setupstack)
-OUTPUT_FORMAT(binary)
+/* The bootloader will look at this image and start execution at the symbol
+   designated as the entry point. */
+ENTRY(setupstack)
 
+/* Tell where the various sections of the object files will be put in the final
+   kernel image. */
 SECTIONS
 {
-    PROVIDE (_executable_start = 0x1000); . = 0x1000;
+    /* Begin putting sections at 1 MiB, a conventional place for kernels to be
+       loaded at by the bootloader. */
+    . = 1M;
+    PROVIDE (_executable_start = .);
 
-    .text : AT (0x1000)
+    /* First put the multiboot header, as it is required to be put very early
+       early in the image or the bootloader won't recognize the file format.
+       Next we'll put the .text section. */
+    .text BLOCK(4K) : ALIGN(4K)
     {
+        *(.multiboot)
         *(.text)
     }
-    .rodata :
+
+    /* Read-only data. */
+    .rodata BLOCK(4K) : ALIGN(4K)
     {
-        *(.rodata*)
+        *(.rodata)
     }
 
-    .data :
+    /* Read-write data (initialized) */
+    .data BLOCK(4K) : ALIGN(4K)
     {
         *(.data)
     }
 
-    .bss :
+    /* Read-write data (uninitialized) and stack */
+    .bss BLOCK(4K) : ALIGN(4K)
     {
-        sbss = .;
         *(COMMON)
         *(.bss)
-        ebss = .;
+        *(.bootstrap_stack)
     }
 
     PROVIDE (_etext = .);

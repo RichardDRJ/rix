@@ -8,19 +8,20 @@ ASMSRCS		:=	$(shell find $(SRCDIR) -maxdepth 1 -name '*.asm')
 HEADERS		:=	$(shell find $(SRCDIR) -maxdepth 1 -name '*.h')
 OBJECTS 	:=	$(subst src,$(BINDIR),$(SRCS:%.c=%.c.o)) $(subst src,$(BINDIR),$(ASMSRCS:%.asm=%.asm.o))
 
-CFLAGS		:=	-m32 -Wall -Wextra -Werror -nostdlib -fno-builtin -nostartfiles -nodefaultlibs --no-builtin -ffreestanding -fleading-underscore  -std=c99
-ASMFLAGS		:=	-felf
+CFLAGS		:=	-m32 -Wall -Wextra -Werror -nostdlib -fno-builtin -nostartfiles -nodefaultlibs --no-builtin -ffreestanding -fleading-underscore  -std=c99 -g
+LDFLAGS		:=	-T main.ld -ffreestanding -O2 -nostdlib -lgcc
+ASMFLAGS	:=	-felf
 INCLUDES	:=	$(addprefix -I,$(SRCDIR))
 
 AS 			:=	nasm
 CC			:=	i586-elf-gcc
-LD			:=	i586-elf-ld
+LD			:=	i586-elf-gcc
 
 vpath $(SRCDIR)
 
 all: $(OBJECTS)
 	make -C ../bootloader && cp ../bootloader/start.img $(BINDIR)
-	$(LD) $(OBJECTS) -o $(TARGET) -m elf_i386 --oformat binary -T main.ld
+	$(LD) $(OBJECTS) -o $(TARGET) $(LDFLAGS)
 	sudo mount -o users,loop $(BINDIR)/start.img startmount/
 	sudo cp $(TARGET) startmount/
 	sleep 1

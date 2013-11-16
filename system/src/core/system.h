@@ -11,14 +11,14 @@ static inline void outb(unsigned short port, unsigned char val)
 static inline unsigned char inb(unsigned short port)
 {
     unsigned char ret;
-    __asm volatile( "inb %1, %0" : "=a"(ret) : "nd"(port) );
+    __asm volatile( "inb %1, %0" : "=a"(ret) : "Nd"(port) );
     return ret;
 }
 
 static inline unsigned short inw(unsigned short port)
 {
     unsigned short ret;
-    __asm volatile( "inw %1, %0" : "=a"(ret) : "nd"(port) );
+    __asm volatile( "inw %1, %0" : "=a"(ret) : "Nd"(port) );
     return ret;
 }
 
