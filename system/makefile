@@ -22,6 +22,7 @@ vpath $(SRCDIR)
 all: $(OBJECTS)
 	make -C ../bootloader && cp ../bootloader/start.img $(BINDIR)
 	$(LD) $(OBJECTS) -o $(TARGET) $(LDFLAGS)
+	mkdir -p startmount
 	sudo mount -o users,loop $(BINDIR)/start.img startmount/
 	sudo cp $(TARGET) startmount/
 	sleep 1
@@ -39,11 +40,14 @@ boottest: $(OBJECTS)
 	sudo cp $(TARGET) startmount/
 	sudo umount startmount
 
-$(BINDIR)/%.c.o: src/%.c
+$(BINDIR)/%.c.o: src/%.c $(BINMODS)
 	$(CC) $(CFLAGS) $(LDFLAGS) $(INCLUDES) $(DEFS) -c $< -o $@
 
-$(BINDIR)/%.asm.o: src/%.asm
+$(BINDIR)/%.asm.o: src/%.asm $(BINMODS)
 	$(AS) $(ASMFLAGS) $< -o $@
+
+$(BINMODS):
+	mkdir -p $@
 
 clean:
 	rm -f $(TARGET)
