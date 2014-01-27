@@ -1,29 +1,21 @@
-all: stage1 stage2
+SRCDIR		:=	src
+BINDIR		:=	bin
+BINMODS		:=	$(addprefix bin/,$(MODULES))
+TARGET		:=	$(BINDIR)/stage1.bin
 
+AS 			:=	nasm
 
-stage1:
-	make -C stage1
+all: $(BINDIR)/loader.bin
 
-stage2:
-	make -C stage2
+bootstraptest: $(BINDIR)/loader.bin $(BINDIR)/bootstraptest.bin
 
-bootstraptest: loader
-	nasm bootstraptest.asm -o BFYTW.BIN
-	mkdir -p startmount
-	sudo mount -o loop start.img startmount
-	sudo cp BFYTW.BIN startmount
-	sleep 1
-	sudo umount startmount
+$(BINDIR)/bootstraptest.bin: $(SRCDIR)/bootstraptest.asm
+	@mkdir -p $(BINDIR)
+	$(AS) $< -o $@
 
-loader:
-	nasm loader.asm -o loader.bin
-	dd if=/dev/zero of=start.img bs=512 count=2048
-	dd if=loader.bin of=start.img bs=512 conv=notrunc
-
-vdi: loader
-	rm -f start.vdi
-	VBoxManage convertfromraw -format VDI start.img start.vdi
-
+$(BINDIR)/loader.bin: $(SRCDIR)/loader.asm
+	@mkdir -p $(BINDIR)
+	$(AS) $< -o $@
 
 clean:
 	rm -f BFYTW.BIN

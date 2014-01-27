@@ -1,5 +1,4 @@
 #include "string.h"
-#include "palloc.h"
 #include "system.h"
 
 char strcmp(char *str1, char *str2)
@@ -121,9 +120,8 @@ char toUpper(char in)
     return in;
 }
 
-char *filenametoshort(char *fname)
+void filenametoshort(char *fname, char rets[12])
 {
-    char *rets = palloc(12 * sizeof(char));
     unsigned short i = 0;
     for(; i < 8; ++i)
     {
@@ -149,6 +147,4 @@ char *filenametoshort(char *fname)
         rets[i] = ' ';
 
     rets[11] = 0;
-
-    return rets;
 }

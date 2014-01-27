@@ -13,7 +13,7 @@ unsigned int strspn(const char *, const char *);
 
 char strcontains(char*, char);
 
-char *filenametoshort(char*);
+void filenametoshort(char*, char[12]);
 
 char iswhitespace(char);
 

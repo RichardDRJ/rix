@@ -1,5 +1,6 @@
-all: stage1 stage2
+.PHONY: all stage1 stage2 clean
 
+all: stage1 stage2
 
 stage1:
 	make -C stage1

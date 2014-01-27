@@ -4,10 +4,11 @@
 #include "system.h"
 
 char header_space[512];
+fileentry_t rootentries[16];
 
 void read_file_to(char *shortname, void *dest)
 {
-    struct bpb *header = header_space;
+    struct bpb *header = (struct bpb*)header_space;
     
     readblock(0, (unsigned char*)header, 1, 0);
     header = (struct bpb*)((unsigned char*)header + 3);
@@ -17,10 +18,10 @@ void read_file_to(char *shortname, void *dest)
 
     /*  TODO: Make this more robust. Find a better place to put the FAT. */
     unsigned int fatSize = (header->sectorsPerFAT * header->sectorSize);
-    unsigned char *fat = read_FAT_to(header, 0);
+    unsigned char *fat = 0;
+    read_FAT_to(header, fatSize, fat);
 
     unsigned char *buffer = dest;
-    unsigned char *retval = buffer;
     unsigned short clusternum = initEntry->startcluster;
 
     unsigned int maxnumclusters = header->sectorsPerFAT * header->sectorSize / 16;
@@ -38,26 +39,8 @@ unsigned short nextcluster(unsigned short currcluster, unsigned char *fat)
     return *(unsigned short*)((unsigned int)fat + (currcluster) * 2);
 }
 
-unsigned char *read_FAT_to(struct bpb *header, unsigned int fatSize)
-{
-    unsigned int FATblock = header->reservedSectors;
-    unsigned char *retmem = palloc(fatSize);
-    unsigned char *currRead;
-    currRead = retmem;
-
-    fatSize -= 512;
-
-    while(fatSize > 0 && FATblock < header->sectorsPerFAT)
-    {
-        readblock(FATblock++, currRead, 1, 0);
-        currRead += 512;
-        fatSize -= 512;
-    }
-    return retmem;
-}
-
 /*  TODO: Return a status code. */
-void read_FAT_to(struct bpb *header, void *dest)
+void read_FAT_to(struct bpb *header, unsigned int fatSize, void *dest)
 {
     unsigned int FATblock = header->reservedSectors;
     unsigned char *currRead;
@@ -89,8 +72,6 @@ void readcluster(unsigned int clusternum, struct bpb *header, unsigned char *buf
 fileentry_t *getinitialentry(char* shortname, struct bpb *header)
 {
     unsigned int rootblock = (header->reservedSectors + header->numberOfFATs * header->sectorsPerFAT);
-
-    fileentry_t *rootentries = palloc(16 * sizeof(fileentry_t));
     unsigned int entryindex;
 
     for(entryindex = 0; entryindex < header->rootEntries; ++entryindex)
@@ -111,5 +92,5 @@ fileentry_t *getinitialentry(char* shortname, struct bpb *header)
             break;
     }
 
-    return &(rootentries[entryindex % 16]);;
+    return &(rootentries[entryindex % 16]);
 }

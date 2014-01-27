@@ -37,9 +37,9 @@ typedef struct fileentry
 
 } __attribute__ ((packed)) fileentry_t;
 
-unsigned char *read_file_to(char*, void*);
+void read_file_to(char*, void*);
 
-unsigned char *read_FAT_to(struct bpb*, void *);
+void read_FAT_to(struct bpb*, unsigned int, void *);
 
 void readcluster(unsigned int, struct bpb*, unsigned char*);
 

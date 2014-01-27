@@ -19,8 +19,6 @@
 #ifndef _ELF_H
 #define	_ELF_H 1
 
-__BEGIN_DECLS
-
 /* Standard ELF types.  */
 
 #include "stdint.h"
@@ -3213,8 +3211,5 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_TILEGX_GNU_VTENTRY	129	/* GNU C++ vtable member usage */
 
 #define R_TILEGX_NUM		130
-
-
-__END_DECLS
 
 #endif	/* elf.h */
