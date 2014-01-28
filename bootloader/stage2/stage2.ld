@@ -1,4 +1,4 @@
-ENTRY (loadkernel)
+ENTRY (_load_kernel)
 OUTPUT_FORMAT(binary)
 
 SECTIONS
