@@ -12,7 +12,7 @@ void readblock(unsigned int blocknum, unsigned char *buffer, unsigned int numblo
     outb(0x1F7, 0x20);
 
     while (!(inb(0x1F7) & 0x08)) {}
-    
+
     unsigned short wordIndex;
 
     for (wordIndex = 0; wordIndex < 256; ++wordIndex)

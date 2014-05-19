@@ -17,12 +17,12 @@ install: bootloader system
 	@dd if=$(STAGE1PATH) of=$(IMGTARGET) bs=512 conv=notrunc
 	@echo "mounting image..."
 	@mkdir -p $(MNTPATH)
-	@mount -o users,loop $(IMGTARGET) $(MNTPATH)
-	@umount $(MNTPATH)
+	@sudo mount -o users,loop $(IMGTARGET) $(MNTPATH)
 	@echo "installing stage2..."
-	@cp $(STAGE2PATH) $(MNTPATH)
+	@sudo cp $(STAGE2PATH) $(MNTPATH)
 	@echo "installing system..."
-	@cp $(SYSTEMPATH) $(MNTPATH)
+	@sudo cp $(SYSTEMPATH) $(MNTPATH)
+	@sudo umount $(MNTPATH)
 
 bootloader:
 	@make -C bootloader

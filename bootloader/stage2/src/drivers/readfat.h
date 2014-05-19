@@ -41,7 +41,7 @@ void read_file_to(char*, void*);
 
 void read_FAT_to(struct bpb*, unsigned int, void *);
 
-void readcluster(unsigned int, struct bpb*, unsigned char*);
+void readclusters(unsigned int cluster, unsigned int numclusters, struct bpb *header, unsigned char *buffer);
 
 fileentry_t *getinitialentry(char*, struct bpb*);
 

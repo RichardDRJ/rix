@@ -1,4 +1,4 @@
-MODULES		:=	drivers stdlib
+MODULES		:=	drivers stdlib modules
 SRCDIR		:=	src $(addprefix src/,$(MODULES))
 BINDIR		:=	bin
 BINMODS		:=	$(addprefix bin/,$(MODULES))
@@ -6,11 +6,11 @@ TARGET		:=	$(BINDIR)/stage2.bin
 SRCS		:=	$(shell find $(SRCDIR) -maxdepth 1 -name '*.c')
 ASMSRCS		:=	$(shell find $(SRCDIR) -maxdepth 1 -name '*.asm')
 HEADERS		:=	$(shell find $(SRCDIR) -maxdepth 1 -name '*.h')
-OBJECTS 	:=	$(subst src,$(BINDIR),$(SRCS:%.c=%.c.o)) $(subst src,$(BINDIR),$(ASMSRCS:%.asm=%.asm.o))
+OBJECTS 	:=	$(subst src,$(BINDIR),$(ASMSRCS:%.asm=%.asm.o)) $(subst src,$(BINDIR),$(SRCS:%.c=%.c.o))
 
 CFLAGS		:=	-m32 -Wall -Wextra -Werror -nostdlib -fno-builtin -nostartfiles -nodefaultlibs --no-builtin -ffreestanding -fleading-underscore  -std=c99 -g
-LDFLAGS		:=	-T stage2.ld -O2 -nostdlib -g --oformat binary
-ASMFLAGS	:=	-g
+LDFLAGS		:=	-T stage2.ld -O2 -nostdlib -Map stage2.map -g --oformat binary
+ASMFLAGS	:=	-g -felf
 INCLUDES	:=	$(addprefix -I,$(SRCDIR))
 
 AS 			:=	nasm
