@@ -29,7 +29,7 @@ void read_file_to(char *shortname, void *dest)
 
 	while(clusternum < maxnumclusters)
 	{
-		readcluster(clusternum, 1 header, buffer);
+		readclusters(clusternum, 1, header, buffer);
 		buffer += (header->sectorsPerCluster * header->sectorSize);
 		clusternum = nextcluster(clusternum, fat);
 	}
@@ -70,7 +70,7 @@ void readclusters(unsigned int cluster, unsigned int numclusters, struct bpb *he
 fileentry_t *getinitialentry(char* shortname, struct bpb *header)
 {
 	unsigned int rootblock = (header->reservedSectors + header->numberOfFATs * header->sectorsPerFAT);
-	unsigned int entryindex;
+	unsigned int entryindex = 0;
 
 	for(entryindex = 0; entryindex < header->rootEntries; ++entryindex)
 	{

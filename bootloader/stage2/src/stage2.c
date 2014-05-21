@@ -2,8 +2,8 @@
 #include "readfat.h"
 #include "modules/kprint.h"
 
-#define KERNEL_OFFSET (void*)0x100000
-#define KERNEL_NAME "kernel.bin"
+#define KERNEL_OFFSET (void*)0x4000
+#define KERNEL_NAME "SYSTEM  BIN"
 
 typedef void(*kmain_function)();
 
@@ -53,5 +53,12 @@ void load_kernel(void)
 	kmain_function entry_point = (kmain_function)get_entry_point(KERNEL_OFFSET);
 
 	/*	Jump to entry point (passing in required info). */
-	entry_point();
+	//entry_point();
+
+	__asm__ (
+			"jmp *%%eax"
+			: /* no output registers */
+			: "a" (entry_point)
+			:
+		);
 }

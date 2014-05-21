@@ -1,0 +1,199 @@
+
+Allocating common symbols
+Common symbol       size              file
+
+_header_space       0x200             bin/drivers/readfat.c.o
+_rootentries        0x200             bin/drivers/readfat.c.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD bin/createstack.asm.o
+LOAD bin/stage2.c.o
+LOAD bin/drivers/readfat.c.o
+LOAD bin/drivers/harddiskdriver.c.o
+LOAD bin/stdlib/string.c.o
+LOAD bin/stdlib/system.c.o
+LOAD bin/modules/kprint.c.o
+                0x0000000000001000                PROVIDE (_executable_start, 0x1000)
+                0x0000000000001000                . = 0x1000
+
+.text           0x0000000000001000      0xde1
+ *(.text)
+ .text          0x0000000000001000       0x18 bin/createstack.asm.o
+                0x0000000000001000                _start
+ .text          0x0000000000001018       0x79 bin/stage2.c.o
+                0x0000000000001018                _get_entry_point32
+                0x000000000000102c                _get_entry_point
+                0x0000000000001055                _load_kernel
+ *fill*         0x0000000000001091        0x3 
+ .text          0x0000000000001094      0x379 bin/drivers/readfat.c.o
+                0x0000000000001094                _read_file_to
+                0x00000000000011c8                _nextcluster
+                0x00000000000011eb                _read_FAT_to
+                0x000000000000123f                _readclusters
+                0x0000000000001318                _getinitialentry
+ *fill*         0x000000000000140d        0x3 
+ .text          0x0000000000001410      0x186 bin/drivers/harddiskdriver.c.o
+                0x0000000000001465                _readblock
+ *fill*         0x0000000000001596        0x2 
+ .text          0x0000000000001598      0x321 bin/stdlib/string.c.o
+                0x0000000000001598                _strcmp
+                0x00000000000015dd                _iswhitespace
+                0x000000000000160f                _strcontains
+                0x000000000000163b                _strchr
+                0x0000000000001667                _strcspn
+                0x00000000000016aa                _strspn
+                0x00000000000016eb                _strtok
+                0x0000000000001796                _toUpper
+                0x00000000000017bc                _filenametoshort
+ *fill*         0x00000000000018b9        0x3 
+ .text          0x00000000000018bc       0x6e bin/stdlib/system.c.o
+                0x00000000000018bc                _memset
+                0x00000000000018f1                _memcpy
+ *fill*         0x000000000000192a        0x2 
+ .text          0x000000000000192c      0x4b5 bin/modules/kprint.c.o
+                0x0000000000001948                _updatecursor
+                0x00000000000019cd                _writec
+                0x0000000000001a69                _setfc
+                0x0000000000001a9d                _setbc
+                0x0000000000001ad5                _backspace
+                0x0000000000001b53                _incChar
+                0x0000000000001c30                _cls
+                0x0000000000001c65                _newLine
+                0x0000000000001ce1                _writes
+                0x0000000000001d0a                _writei
+
+.rodata         0x0000000000001de4       0x5c
+ *(.rodata*)
+ .rodata        0x0000000000001de4       0x25 bin/stage2.c.o
+ *fill*         0x0000000000001e09        0x3 
+ .rodata        0x0000000000001e0c       0x34 bin/modules/kprint.c.o
+
+.eh_frame       0x0000000000001e40      0x4e4
+ .eh_frame      0x0000000000001e40       0x78 bin/stage2.c.o
+ .eh_frame      0x0000000000001eb8       0xc0 bin/drivers/readfat.c.o
+ .eh_frame      0x0000000000001f78       0x98 bin/drivers/harddiskdriver.c.o
+ .eh_frame      0x0000000000002010      0x140 bin/stdlib/string.c.o
+ .eh_frame      0x0000000000002150       0x58 bin/stdlib/system.c.o
+ .eh_frame      0x00000000000021a8      0x17c bin/modules/kprint.c.o
+
+.data           0x0000000000002324        0x2
+ *(.data)
+ .data          0x0000000000002324        0x0 bin/stage2.c.o
+ .data          0x0000000000002324        0x0 bin/drivers/readfat.c.o
+ .data          0x0000000000002324        0x0 bin/drivers/harddiskdriver.c.o
+ .data          0x0000000000002324        0x0 bin/stdlib/string.c.o
+ .data          0x0000000000002324        0x0 bin/stdlib/system.c.o
+ .data          0x0000000000002324        0x2 bin/modules/kprint.c.o
+
+.bss            0x0000000000002340      0x408
+                0x0000000000002340                sbss = .
+ *(COMMON)
+ COMMON         0x0000000000002340      0x400 bin/drivers/readfat.c.o
+                0x0000000000002340                _header_space
+                0x0000000000002540                _rootentries
+ *(.bss)
+ .bss           0x0000000000002740        0x0 bin/stage2.c.o
+ .bss           0x0000000000002740        0x0 bin/drivers/readfat.c.o
+ .bss           0x0000000000002740        0x0 bin/drivers/harddiskdriver.c.o
+ .bss           0x0000000000002740        0x4 bin/stdlib/string.c.o
+ .bss           0x0000000000002744        0x0 bin/stdlib/system.c.o
+ .bss           0x0000000000002744        0x4 bin/modules/kprint.c.o
+                0x0000000000002748                ebss = .
+                0x0000000000002748                PROVIDE (_etext, .)
+OUTPUT(bin/stage2.bin binary)
+
+.stab           0x0000000000000000       0x6c
+ .stab          0x0000000000000000       0x6c bin/createstack.asm.o
+
+.stabstr        0x0000000000000000       0x15
+ .stabstr       0x0000000000000000       0x15 bin/createstack.asm.o
+
+.debug_addr     0x0000000000000000       0xa8
+ .debug_addr    0x0000000000000000        0xc bin/stage2.c.o
+ .debug_addr    0x000000000000000c       0x20 bin/drivers/readfat.c.o
+ .debug_addr    0x000000000000002c       0x14 bin/drivers/harddiskdriver.c.o
+ .debug_addr    0x0000000000000040       0x28 bin/stdlib/string.c.o
+ .debug_addr    0x0000000000000068        0x8 bin/stdlib/system.c.o
+ .debug_addr    0x0000000000000070       0x38 bin/modules/kprint.c.o
+
+.debug_info     0x0000000000000000      0x25d
+ .debug_info    0x0000000000000000       0x5d bin/stage2.c.o
+ .debug_info    0x000000000000005d       0x66 bin/drivers/readfat.c.o
+ .debug_info    0x00000000000000c3       0x6d bin/drivers/harddiskdriver.c.o
+ .debug_info    0x0000000000000130       0x64 bin/stdlib/string.c.o
+ .debug_info    0x0000000000000194       0x64 bin/stdlib/system.c.o
+ .debug_info    0x00000000000001f8       0x65 bin/modules/kprint.c.o
+
+.debug_abbrev   0x0000000000000000       0x9c
+ .debug_abbrev  0x0000000000000000       0x1a bin/stage2.c.o
+ .debug_abbrev  0x000000000000001a       0x1a bin/drivers/readfat.c.o
+ .debug_abbrev  0x0000000000000034       0x1a bin/drivers/harddiskdriver.c.o
+ .debug_abbrev  0x000000000000004e       0x1a bin/stdlib/string.c.o
+ .debug_abbrev  0x0000000000000068       0x1a bin/stdlib/system.c.o
+ .debug_abbrev  0x0000000000000082       0x1a bin/modules/kprint.c.o
+
+.debug_pubnames
+                0x0000000000000000      0x27d
+ .debug_pubnames
+                0x0000000000000000       0x4c bin/stage2.c.o
+ .debug_pubnames
+                0x000000000000004c       0x89 bin/drivers/readfat.c.o
+ .debug_pubnames
+                0x00000000000000d5       0x39 bin/drivers/harddiskdriver.c.o
+ .debug_pubnames
+                0x000000000000010e       0x8b bin/stdlib/string.c.o
+ .debug_pubnames
+                0x0000000000000199       0x28 bin/stdlib/system.c.o
+ .debug_pubnames
+                0x00000000000001c1       0xbc bin/modules/kprint.c.o
+
+.debug_pubtypes
+                0x0000000000000000      0x2e6
+ .debug_pubtypes
+                0x0000000000000000      0x12c bin/stage2.c.o
+ .debug_pubtypes
+                0x000000000000012c       0x88 bin/drivers/readfat.c.o
+ .debug_pubtypes
+                0x00000000000001b4       0x4c bin/drivers/harddiskdriver.c.o
+ .debug_pubtypes
+                0x0000000000000200       0x4b bin/stdlib/string.c.o
+ .debug_pubtypes
+                0x000000000000024b       0x46 bin/stdlib/system.c.o
+ .debug_pubtypes
+                0x0000000000000291       0x55 bin/modules/kprint.c.o
+
+.debug_aranges  0x0000000000000000       0xc0
+ .debug_aranges
+                0x0000000000000000       0x20 bin/stage2.c.o
+ .debug_aranges
+                0x0000000000000020       0x20 bin/drivers/readfat.c.o
+ .debug_aranges
+                0x0000000000000040       0x20 bin/drivers/harddiskdriver.c.o
+ .debug_aranges
+                0x0000000000000060       0x20 bin/stdlib/string.c.o
+ .debug_aranges
+                0x0000000000000080       0x20 bin/stdlib/system.c.o
+ .debug_aranges
+                0x00000000000000a0       0x20 bin/modules/kprint.c.o
+
+.debug_line     0x0000000000000000      0x445
+ .debug_line    0x0000000000000000       0x6e bin/stage2.c.o
+ .debug_line    0x000000000000006e       0xbf bin/drivers/readfat.c.o
+ .debug_line    0x000000000000012d       0xa8 bin/drivers/harddiskdriver.c.o
+ .debug_line    0x00000000000001d5      0x12a bin/stdlib/string.c.o
+ .debug_line    0x00000000000002ff       0x5c bin/stdlib/system.c.o
+ .debug_line    0x000000000000035b       0xea bin/modules/kprint.c.o
+
+.comment        0x0000000000000000       0x6c
+ .comment       0x0000000000000000       0x12 bin/stage2.c.o
+ .comment       0x0000000000000012       0x12 bin/drivers/readfat.c.o
+ .comment       0x0000000000000024       0x12 bin/drivers/harddiskdriver.c.o
+ .comment       0x0000000000000036       0x12 bin/stdlib/string.c.o
+ .comment       0x0000000000000048       0x12 bin/stdlib/system.c.o
+ .comment       0x000000000000005a       0x12 bin/modules/kprint.c.o
