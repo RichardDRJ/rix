@@ -27,85 +27,75 @@ extern unsigned etext;
 
 void setIRQHandlers(void)
 {
-    irqInstallHandler(1, &handleKeyPress);
-    irqInstallHandler(0x60, &systemCall);
-    initSystemCalls();
+	irqInstallHandler(1, &handleKeyPress);
+	irqInstallHandler(0x60, &systemCall);
+	initSystemCalls();
 }
 
 void main(void)
 {
-    writes("__LINE__\n");
-    setuppalloc((unsigned)&executable_start, (unsigned)&etext, ptrmemtablestart, ptrmemtableend);
+	setuppalloc((unsigned)&executable_start, (unsigned)&etext, ptrmemtablestart, ptrmemtableend);
 
-    writes("__LINE__\n");
+	installIDT();
+	isrsinstall();
+	irqsinstall();
+	setIRQHandlers();
 
-    installIDT();
-    isrsinstall();
-    irqsinstall();
-    setIRQHandlers();
+	__asm ("sti");
 
-    writes("__LINE__\n");
+	cls();
 
-    __asm ("sti");
+	setupstdin();
 
-    writes("__LINE__\n");
+/*	unsigned char *command;
+	command = palloc(200 * sizeof(char));
 
-    cls();
+	void *testpalloc;
 
-    writes("__LINE__\n");
+	while(stdingets(command, 200))
+	{
+		char *commandhead = strtok((char*)command, " \n\t\r");
 
-    /*
-    setupstdin();
+		if(!strcmp(commandhead, "enigma"))
+		{
+			void (*program)(int, char**) = (void (*)(int, char**))readfile("ENIGMA  BIN");
 
-    unsigned char *command;
-    command = palloc(200 * sizeof(char));
+			int eargv = 0;
+			char *argsbuff[40];
+			argsbuff[0] = "enigma";
 
-    void *testpalloc;
+			char nexttokpipe = 0;
 
-    while(stdingets(command, 200))
-    {
-        char *commandhead = strtok((char*)command, " \n\t\r");
+			while( (argsbuff[++eargv] = strtok(0, " \n\t\r")) )
+			{
+				if(nexttokpipe)
+				{
+					redirect(readfiletoFILE(filenametoshort(argsbuff[eargv])));
+					nexttokpipe = 0;
+					--eargv;
+				}
+				if(!strcmp(argsbuff[eargv], "<"))
+				{
+					--eargv;
+					nexttokpipe = 1;
+				}
+			}
 
-        if(!strcmp(commandhead, "enigma"))
-        {
-            void (*program)(int, char**) = (void (*)(int, char**))readfile("ENIGMA  BIN");
+			char **eargc;
+			eargc = argsbuff;
 
-            int eargv = 0;
-            char *argsbuff[40];
-            argsbuff[0] = "enigma";
+			cls();
+			(*program)(eargv, eargc);
+		}
+		else if(!strcmp(commandhead, "palloc"))
+		{
+			testpalloc = palloc(512);
+		}
+		else if(!strcmp(commandhead, "free"))
+		{
+			pfree(testpalloc);
+		}
+	}
 
-            char nexttokpipe = 0;
-
-            while( (argsbuff[++eargv] = strtok(0, " \n\t\r")) )
-            {
-                if(nexttokpipe)
-                {
-                    redirect(readfiletoFILE(filenametoshort(argsbuff[eargv])));
-                    nexttokpipe = 0;
-                    --eargv;
-                }
-                if(!strcmp(argsbuff[eargv], "<"))
-                {
-                    --eargv;
-                    nexttokpipe = 1;
-                }
-            }
-
-            char **eargc;
-            eargc = argsbuff;
-
-            cls();
-            (*program)(eargv, eargc);
-        }
-        else if(!strcmp(commandhead, "palloc"))
-        {
-            testpalloc = palloc(512);
-        }
-        else if(!strcmp(commandhead, "free"))
-        {
-            pfree(testpalloc);
-        }
-    }
-
-    pfree(command);*/
+	pfree(command);*/
 }

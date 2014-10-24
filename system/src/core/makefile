@@ -1,6 +1,6 @@
 CFLAGS	:=	-m32 -Wall -Wextra -Werror -nostdlib -fno-builtin -nostartfiles -nodefaultlibs --no-builtin -ffreestanding -fleading-underscore -I core -I drivers -I modules
-CC		:=	i586-elf-gcc
-LD		:=	i586-elf-ld
+CC		:=	i686-elf-gcc
+LD		:=	i686-elf-ld
 
 all: main
 	$(LD) createstack.o readfat.o string.o system.o stdin.o harddiskdriver.o interrupts.o irqs.o isrs.o main.o screenprint.o keyboarddriver.o walloc.o -o BFYTW.BIN -m elf_i386 --oformat binary -T main.ld

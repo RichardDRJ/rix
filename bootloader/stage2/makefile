@@ -14,8 +14,8 @@ ASMFLAGS	:=	-g -felf
 INCLUDES	:=	$(addprefix -I,$(SRCDIR))
 
 AS 			:=	nasm
-CC			:=	i586-elf-gcc
-LD			:=	i586-elf-ld
+CC			:=	i686-elf-gcc
+LD			:=	i686-elf-ld
 
 vpath $(SRCDIR)
 

@@ -109,8 +109,6 @@ void follow_program_header(void *elf_start)
 
 void load_kernel(void)
 {
-	writes("reading at line __LINE__");
-
 	/*	Read file from FAT into memory. */
 	read_file_to(KERNEL_NAME, KERNEL_OFFSET);
 
